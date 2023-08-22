@@ -31,56 +31,70 @@ class _RegisterViewState extends State<RegisterView> {
 @override
   Widget build(BuildContext context) {
 
-    return Column(
-          children: [
-      
-            TextField(
-              controller: _email,
-              autocorrect: false,
-              enableSuggestions: false,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                hintText: 'Email'
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+      ),
+      body: Column(
+            children: [
+        
+              TextField(
+                controller: _email,
+                autocorrect: false,
+                enableSuggestions: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  hintText: 'Email'
+                ),
               ),
-            ),
-      
-            TextField(
-              controller: _password,
-              obscureText: true,
-              autocorrect: false,
-              enableSuggestions: false,
-              decoration: const InputDecoration(
-                hintText: 'Password'
+        
+              TextField(
+                controller: _password,
+                obscureText: true,
+                autocorrect: false,
+                enableSuggestions: false,
+                decoration: const InputDecoration(
+                  hintText: 'Password'
+                ),
               ),
-            ),
-            
-            TextButton(
-              onPressed: () async {
-      
-                final email = _email.text;
-                final password = _password.text;
-                try{
-                  final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: email,
-                  password: password
-                  );
-                  // ignore: avoid_print
-                  print(userCredential);
-                } on FirebaseAuthException catch(e){
-                  if(e.code == 'weak-password'){
-                    print('Weak password. Password should be atleast 6 characters long.');
-                  }else if(e.code == 'invalid-email'){
-                    print('Email is badly formatted.');
-                  }else if(e.code == 'email-already-in-use'){
-                    print('Email is already in use');
+              
+              TextButton(
+                onPressed: () async {
+        
+                  final email = _email.text;
+                  final password = _password.text;
+                  try{
+                    final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: email,
+                    password: password
+                    );
+                    // ignore: avoid_print
+                    print(userCredential);
+                  } on FirebaseAuthException catch(e){
+                    if(e.code == 'weak-password'){
+                      print('Weak password. Password should be atleast 6 characters long.');
+                    }else if(e.code == 'invalid-email'){
+                      print('Email is badly formatted.');
+                    }else if(e.code == 'email-already-in-use'){
+                      print('Email is already in use');
+                    }
                   }
-                }
-               
-              }, 
-      
-              child: const Text('Register')
-              ),
-          ],
-        );
+                 
+                }, 
+        
+                child: const Text('Register')
+                ),
+                const Text('Already registered?'),
+    
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/login/',
+                       (route) => false);
+                  },
+                 child: const Text('Login here!'))
+            ],
+          ),
+    );
   }
 }

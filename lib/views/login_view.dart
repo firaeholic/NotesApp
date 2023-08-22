@@ -30,56 +30,70 @@ late final TextEditingController _email;
 @override
   Widget build(BuildContext context) {
 
-    return Column(
-            children: [
-      
-            TextField(
-              controller: _email,
-              autocorrect: false,
-              enableSuggestions: false,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                hintText: 'Email'
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
+      body: Column(
+              children: [
+        
+              TextField(
+                controller: _email,
+                autocorrect: false,
+                enableSuggestions: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  hintText: 'Email'
+                ),
               ),
-            ),
-      
-            TextField(
-              controller: _password,
-              obscureText: true,
-              autocorrect: false,
-              enableSuggestions: false,
-              decoration: const InputDecoration(
-                hintText: 'Password'
+        
+              TextField(
+                controller: _password,
+                obscureText: true,
+                autocorrect: false,
+                enableSuggestions: false,
+                decoration: const InputDecoration(
+                  hintText: 'Password'
+                ),
               ),
-            ),
-            
-            TextButton(
-              onPressed: () async {
-      
-                final email = _email.text;
-                final password = _password.text;
-                try{
-                  final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: email,
-                  password: password
-                  );
-                  // ignore: avoid_print
-                  print(userCredential);
-                } on FirebaseAuthException catch(e){
-                    if(e.code == 'user-not-found'){
-                      print('User not found');
-                    }else if(e.code == 'wrong-password'){
-                      print('Wrong password');
-                    }else {
-                      print("SOmething went wrong");
-                    }
-                }
-              }, 
-      
-              child: const Text('Login')
-              ),
-          ],
-        );
+              
+              TextButton(
+                onPressed: () async {
+        
+                  final email = _email.text;
+                  final password = _password.text;
+                  try{
+                    final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: email,
+                    password: password
+                    );
+                    // ignore: avoid_print
+                    print(userCredential);
+                  } on FirebaseAuthException catch(e){
+                      if(e.code == 'user-not-found'){
+                        print('User not found');
+                      }else if(e.code == 'wrong-password'){
+                        print('Wrong password');
+                      }else {
+                        print("SOmething went wrong");
+                      }
+                  }
+                }, 
+        
+                child: const Text('Login')
+                ),
+                const Text('Not registered yet?'),
+    
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/register/',
+                       (route) => false);
+                  },
+                 child: const Text('Register here!'))
+            ],
+          ),
+    );
   }
 
 
