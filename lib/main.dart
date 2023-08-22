@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/register_view.dart';
-
 import 'firebase_options.dart';
 
 void main() {
@@ -25,7 +24,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register'),
+        title: const Text('Home'),
         backgroundColor: Colors.red,
       ),
       body: FutureBuilder(
@@ -36,18 +35,44 @@ class HomePage extends StatelessWidget {
           switch(snapshot.connectionState){
             case ConnectionState.done:
               final user = FirebaseAuth.instance.currentUser;
-              if(user?.emailVerified ?? false){
-                print('You are verified!');
+              print(user);
+              if(user == null){
+                return const LoginView();
               }else{
-                print('You need to verifity first to use this app');
+                if(user.emailVerified ?? false){
+                return const Text('You are verified');
+              }else{
+                return const VerifyEmailView();
               }
-              return const Text('Done');
+              }
+              // return const LoginView();
             default: 
               return const Text('Loading');
           }
         },
       )
     );
+  }
+}
+
+class VerifyEmailView extends StatefulWidget {
+  const VerifyEmailView({super.key});
+
+  @override
+  State<VerifyEmailView> createState() => _VerifyEmailViewState();
+}
+
+class _VerifyEmailViewState extends State<VerifyEmailView> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+        const Text('Please verify your email'),
+        TextButton(onPressed: () async {
+              final user = FirebaseAuth.instance.currentUser;
+              await user?.sendEmailVerification();
+        }
+        , child: const Text('Send Email Verification'))
+      ]);
   }
 }
 
