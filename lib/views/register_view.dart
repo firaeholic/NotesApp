@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
-
 import 'package:mynotes/constants/routes.dart';
+import '../utilities/show_error_dialog.dart';
 
 
 class RegisterView extends StatefulWidget {
@@ -67,23 +66,30 @@ class _RegisterViewState extends State<RegisterView> {
                   final email = _email.text;
                   final password = _password.text;
                   try{
-                    final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
                     email: email,
                     password: password
                     );
-                    devtools.log(userCredential.toString());
+                    if(context.mounted){
+                      Navigator.of(context).pushNamed(verifyEmailRoute);
+                    }
                   } on FirebaseAuthException catch(e){
                     if(e.code == 'weak-password'){
-                      devtools.log('Weak password. Password should be atleast 6 characters long.');
+                    await showErrorDialog(context, 'Weak password!');
+
                     }else if(e.code == 'invalid-email'){
-                      devtools.log('Email is badly formatted.');
+                    await showErrorDialog(context, 'Invalid email address!');
+
                     }else if(e.code == 'email-already-in-use'){
-                      devtools.log('Email is already in use');
+                    await showErrorDialog(context, 'Email is already in use!');
+
+                    }else{
+                      await showErrorDialog(context, 'Error: ${e.code}');
                     }
+                  }catch (e){
+                    await showErrorDialog(context, e.toString());
                   }
-                 
                 }, 
-        
                 child: const Text('Register')
                 ),
     
