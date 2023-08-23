@@ -84,7 +84,6 @@ class _RegisterViewState extends State<RegisterView> {
         
                 child: const Text('Register')
                 ),
-                const Text('Already registered?'),
     
                 TextButton(
                   onPressed: () {
@@ -92,7 +91,7 @@ class _RegisterViewState extends State<RegisterView> {
                       '/login/',
                        (route) => false);
                   },
-                 child: const Text('Login here!'))
+                 child: const Text('Already registered? Login here!'))
             ],
           ),
     );

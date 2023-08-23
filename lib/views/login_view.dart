@@ -64,25 +64,28 @@ late final TextEditingController _email;
                   final email = _email.text;
                   final password = _password.text;
                   try{
-                    final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
                     email: email,
                     password: password
                     );
-                    devtools.log(userCredential.toString());
+                      if(context.mounted){
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/notes/',
+                        (route) => false);  
+                      }               
                   } on FirebaseAuthException catch(e){
                       if(e.code == 'user-not-found'){
                         devtools.log('User not found');
                       }else if(e.code == 'wrong-password'){
                         devtools.log('Wrong password');
                       }else {
-                        devtools.log("SOmething went wrong");
+                        devtools.log("Something went wrong");
                       }
                   }
                 }, 
         
                 child: const Text('Login')
                 ),
-                const Text('Not registered yet?'),
     
                 TextButton(
                   onPressed: () {
@@ -90,7 +93,7 @@ late final TextEditingController _email;
                       '/register/',
                        (route) => false);
                   },
-                 child: const Text('Register here!'))
+                 child: const Text('Not registered yet? Register here!'))
             ],
           ),
     );
