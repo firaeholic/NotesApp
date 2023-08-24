@@ -1,1 +1,3 @@
 # NotesApp
+
+Flutter note app
