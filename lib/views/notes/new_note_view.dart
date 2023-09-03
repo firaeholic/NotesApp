@@ -35,7 +35,7 @@ class _NewNoteViewState extends State<NewNoteView> {
     _textController.addListener(_textControllerListener);
   }
 
-  Future<DatabaseNote> createNote() async {
+  Future<DatabaseNote> createNewNote() async {
     final existingNote = _note;
     if(existingNote != null){
       return existingNote;
@@ -46,11 +46,10 @@ class _NewNoteViewState extends State<NewNoteView> {
     return await _notesService.createNote(owner: owner);
   }
 
-  void _deleteNoteIfTextIsEmpty() async{
+  void _deleteNoteIfTextIsEmpty(){
     final note = _note;
-    final text = _textController.text;
-    if(note != null && text.isEmpty){
-      await _notesService.deleteNote(id: note.id);
+    if(_textController.text.isEmpty && note != null){
+      _notesService.deleteNote(id: note.id);
     }
   }
 
@@ -77,11 +76,11 @@ class _NewNoteViewState extends State<NewNoteView> {
         title: const Text('New note'),
       ),
       body: FutureBuilder(
-        future: createNote(),
+        future: createNewNote(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState){
             case ConnectionState.done:
-              _note = snapshot.data;
+              _note = snapshot.data as DatabaseNote?;
               _setUpTextControllerListener();
               return TextField(
                 controller: _textController,
