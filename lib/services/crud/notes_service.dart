@@ -129,7 +129,7 @@ class NotesService{
       throw CouldNotFindUserException();
     }
 
-    var text = 'hello';
+    const text = '';
     final noteId = await db.insert(noteTable, {
       userIdColumn: owner.id,
       textColumn: text,
@@ -139,7 +139,7 @@ class NotesService{
     final note = DatabaseNote(id: noteId, userId: owner.id, text: text, isSyncedWithCloud: true);
 
     _notes.add(note);
-    _notesStreamController.add(_notes.toList());
+    _notesStreamController.add(_notes);
 
     return note;
   }
