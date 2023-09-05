@@ -4,7 +4,7 @@ import 'package:mynotes/services/crud/notes_service.dart';
 import 'package:mynotes/utilities/generics/get_arguments.dart';
 
 class CreateUpdateNoteView extends StatefulWidget {
-  const CreateUpdateNoteView({super.key});
+  const CreateUpdateNoteView({Key? key}) : super(key: key);
 
   @override
   State<CreateUpdateNoteView> createState() => _CreateUpdateNoteViewState();
@@ -25,7 +25,6 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   void _textControllerListener() async{
     final note = _note;
     if(note == null){
-      print('note is null');
       return;
     }
     final text = _textController.text;
@@ -47,15 +46,18 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
       return widgetNote;
     }
 
-
     final existingNote = _note;
     if(existingNote != null){
-      return existingNote;
+      return existingNote; 
     }
+
     final currentUser = AuthService.firebase().currentUser!;
     final email = currentUser.email!;
-    final owner = await _notesService.getUser(email: email);
+    print(email);
+    final owner = await _notesService.getOrCreateUSer(email: email);
+    print(owner);
     final newNote = await _notesService.createNote(owner: owner);
+    print(newNote);
     _note = newNote;
     return newNote;
   }
@@ -94,7 +96,6 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState){
             case ConnectionState.done:
-              print(snapshot.data);
               _setUpTextControllerListener();
               return TextField(
                 controller: _textController,

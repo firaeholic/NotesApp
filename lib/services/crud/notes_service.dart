@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mynotes/extension/list/filter.dart';
 import 'package:mynotes/services/crud/crud_exceptions.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' show join;
@@ -7,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 class NotesService{
   Database? _db;
+  DatabaseUser? _user;
 
   List<DatabaseNote> _notes = [];
 
@@ -23,15 +25,29 @@ class NotesService{
 
   late final StreamController<List<DatabaseNote>> _notesStreamController;
 
-  Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;  
+  Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream.filter((note){
+    final currentUser = _user;
+    if(currentUser != null){
+      return note.userId == currentUser.id;
+    }else{
+      throw UserShouldBeSetBeforeReadingAllNotesException();
+    }
+  });
 
-  Future<DatabaseUser> getOrCreateUSer({required String email}) {
+  Future<DatabaseUser> getOrCreateUSer({required String email, bool setAsCurrentUser = true}) async{
     try{
-      final user = getUser(email: email);
+      final user = await getUser(email: email);
+      if(setAsCurrentUser){
+        _user = user;
+      }
       return user;
+
     }on CouldNotFindUserException {
-      final user = createUser(email: email);
-      return user;
+      final newUser = await createUser(email: email);
+      if(setAsCurrentUser){
+        _user = newUser;
+      }
+      return newUser;
     } catch (e){
       rethrow;
     }
@@ -52,7 +68,9 @@ class NotesService{
     final updatedCount = await db.update(noteTable,{
         textColumn: text,
         isSyncedWithCloudColumn: 0
-      }
+      },
+      where: 'id = ?',
+      whereArgs: [note.id]
     );
 
     if(updatedCount == 0){
@@ -132,7 +150,7 @@ class NotesService{
     const text = '';
     final noteId = await db.insert(noteTable, {
       userIdColumn: owner.id,
-      textColumn: text,
+      textColumn: text, 
       isSyncedWithCloudColumn: 1
     });
 
@@ -151,12 +169,12 @@ class NotesService{
       userTable,
       limit: 1,
       where: 'email = ?',
-      whereArgs: [email.toLowerCase()]
-    );  
+      whereArgs: [email.toLowerCase()],
+    ); 
     if(results.isEmpty){
       throw CouldNotFindUserException();
     }else{
-      return DatabaseUser.fromRow(results.first);
+      return DatabaseUser.fromRow(results.first); 
     }
   }
 
@@ -167,7 +185,7 @@ class NotesService{
       userTable,
       limit: 1,
       where: 'email = ?',
-      whereArgs: [email.toLowerCase()]
+      whereArgs: [email.toLowerCase()],
     );
     if(results.isNotEmpty){
       throw UserAlreadyExistsException();
@@ -203,6 +221,13 @@ class NotesService{
     }
   }
 
+  Future<void> _ensureDbIsOpen() async{
+    final db = _db;
+    if(db == null){
+      await open();
+    }
+  }
+
   Future<void> close() async{
     final db = _db;
     if(db == null){
@@ -213,26 +238,19 @@ class NotesService{
     }
   }
 
-  Future<void> _ensureDbIsOpen() async {
-    try{
-      await open();
-    } on DatabaseAlreadyOpenException{
-      //leave for now
-    }
-  }
-
-  Future<void> open () async{
+  Future<void> open() async{
     if(_db != null){
       throw DatabaseAlreadyOpenException;
     }
     try{
+      print('open db');
       final docsPath = await getApplicationDocumentsDirectory();
       final dbPath = join(docsPath.path, dbName);
       final db = await openDatabase(dbPath);
       _db = db;
       await db.execute(createUserTable);
       await db.execute(createNoteTable);
-      await _cacheNotes();
+      await _cacheNotes();  
 
     }on MissingPlatformDirectoryException{
       throw UnableToGetDocmentsDirectoryException();
@@ -252,7 +270,7 @@ class DatabaseUser{
         email = map[emailColumn] as String;
     
   @override
-  String toString() => 'Person ID = $id, email = $email';
+  String toString() => 'Person, ID = $id, email = $email';
 
   @override
   bool operator ==(covariant DatabaseUser other) => id == other.id;
@@ -275,10 +293,16 @@ class DatabaseNote{
         text = map[textColumn] as String,
         isSyncedWithCloud = (map[isSyncedWithCloudColumn] as int) == 1 ? true : false;
   @override
-  String toString() => 'Note ID = $id, userId = $userId, isSyncedWithCloud = $isSyncedWithCloud';
+  String toString() => 'Note, ID = $id, userId = $userId, isSyncedWithCloud = $isSyncedWithCloud';
+
+  @override
+  bool operator ==(covariant DatabaseNote other) => id == other.id;
+  
+  @override
+  int get hashCode => id.hashCode;
 }
 
-const dbName = 'testing.db';
+const dbName = 'notes.db';
 const noteTable = 'note';
 const userTable = 'user';
 const idColumn = 'id';
