@@ -16,7 +16,7 @@ class NotesView extends StatefulWidget {
 class _NotesViewState extends State<NotesView> {
 
   late final NotesService _notesService;
-  String get userEmail => AuthService.firebase().currentUser!.email!;
+  String get userEmail => AuthService.firebase().currentUser!.email;
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _NotesViewState extends State<NotesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your notes'),
+        title: const Text('Your Notes'),
         actions: [
           IconButton(
             onPressed: () {
