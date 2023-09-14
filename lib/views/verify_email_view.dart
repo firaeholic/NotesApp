@@ -44,7 +44,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           TextButton(
             onPressed: () async {
               context.read<AuthBloc>().add(const AuthEventLogOut());
-          }, child: const Text('Restart'))
+          }, child: const Text('Back to login page'))
         ]),
     );
   }

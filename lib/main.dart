@@ -9,6 +9,7 @@ import 'package:mynotes/services/auth/firebase_auth_provider.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/notes/create_update_note_view.dart';
 import 'package:mynotes/views/notes/notes_view.dart';
+import 'package:mynotes/views/password_reset_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verify_email_view.dart';
 
@@ -39,7 +40,6 @@ class HomePage extends StatelessWidget {
         if (state.isLoading){
           LoadingScreen().show(context: context, text: state.loadingText ?? 'Wait a moment');
         }else{
-          print('enought');
           LoadingScreen().hide();
         }
       },
@@ -50,7 +50,10 @@ class HomePage extends StatelessWidget {
         return const VerifyEmailView();
       }else if(state is AuthStateLoggedOut){
         return const LoginView();
-      }else if(state is AuthStateRegistering){
+      }else if(state is AuthStateForgotPassword){
+      return const ResetPasswordView();
+      }
+      else if(state is AuthStateRegistering){
         return const RegisterView();
       }else{
         return const Scaffold(
