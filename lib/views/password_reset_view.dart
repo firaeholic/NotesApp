@@ -53,19 +53,25 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Reset Password'),
+          backgroundColor: const Color(0xFF1B1B1B),
+          centerTitle: true,
         ),
-        body: Padding(
+        body: Container(
           padding: const EdgeInsets.all(16.0),
+          color: const Color.fromARGB(255, 55, 53, 53),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('If you forgot your password, write your email and we will send you a recovery link.'),
+              const Text('If you forgot your password, write your email and we will send you a recovery link.', style: TextStyle(color: Colors.white),),
               TextField(
                 keyboardType: TextInputType.emailAddress,
                 autocorrect: false,
                 autofocus: true,
                 controller: _controller,
+                style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
-                  hintText: 'Email address'
+                  hintText: 'Email address',
+                  hintStyle: TextStyle(color: Colors.white)
                 ),
               ),
               TextButton(
@@ -73,12 +79,14 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                   final email = _controller.text;
                   context.read<AuthBloc>().add(AuthEventForgotPassword(email: email));
                 }, 
-                child: const Text('Reset password')
+                style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(2255, 28, 73, 95)),
+                child: const Text('Reset password', style: TextStyle(color: Colors.white),)
               ),
               TextButton(
                 onPressed: () {
                   context.read<AuthBloc>().add(const AuthEventLogOut());
                 }, 
+                style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255,255,255,255)),
                 child: const Text('Go back'))
             ],
           ),

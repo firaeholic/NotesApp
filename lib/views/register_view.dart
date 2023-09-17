@@ -50,26 +50,35 @@ class _RegisterViewState extends State<RegisterView> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Register'),
+          backgroundColor: const Color(0xFF1B1B1B), // Set app bar color to #1b1b1b
+          centerTitle: true, 
         ),
-        body: Padding(
+        body: Container(
+          color: const Color.fromARGB(255, 55, 53, 53), // Set body color to gray
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('Register using your email and password.'),
+              const Text(
+                'Register using your email and password.',
+                style: TextStyle(color: Colors.white),
+                ),
+              
               TextField(
                 controller: _email,
                 autocorrect: false,
                 enableSuggestions: false,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(hintText: 'Email'),
+                style: const TextStyle(color: Colors.white), // Set text color to white
+                decoration: const InputDecoration(hintText: 'Email', hintStyle: TextStyle(color: Colors.white)),
               ),
               TextField(
                 controller: _password,
                 obscureText: true,
                 autocorrect: false,
                 enableSuggestions: false,
-                decoration: const InputDecoration(hintText: 'Password'),
+                style: const TextStyle(color: Colors.white), // Set text color to white
+                decoration: const InputDecoration(hintText: 'Password',hintStyle: TextStyle(color: Colors.white)),
               ),
               TextButton(
                   onPressed: () async {
@@ -77,11 +86,17 @@ class _RegisterViewState extends State<RegisterView> {
                     final password = _password.text;
                     context.read<AuthBloc>().add(AuthEventRegister(email, password,));
                   },
-                  child: const Text('Register')),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 28, 73, 95), // Set button color to a cooler shade of blue
+              ),
+                  child: const Text('Register', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),)),
               TextButton(
                   onPressed: () {
                     context.read<AuthBloc>().add(const AuthEventLogOut());
                   },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.white, // Set button text color to white
+              ),
                   child: const Text('Already registered? Login here!'))
             ],
           ),
