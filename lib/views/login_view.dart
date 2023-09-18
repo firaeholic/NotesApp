@@ -48,11 +48,11 @@ Widget build(BuildContext context) {
     child: Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
-        backgroundColor: const Color(0xFF1B1B1B), // Set app bar color to #1b1b1b
-        centerTitle: true, // Center the app bar title
+        backgroundColor: const Color(0xFF1B1B1B),
+        centerTitle: true,
       ),
       body: Container(
-        color: const Color.fromARGB(255, 55, 53, 53), // Set body color to gray
+        color: const Color.fromARGB(255, 55, 53, 53), 
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -66,10 +66,10 @@ Widget build(BuildContext context) {
               autocorrect: false,
               enableSuggestions: false,
               keyboardType: TextInputType.emailAddress,
-              style: const TextStyle(color: Colors.white), // Set text color to white
+              style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
                 hintText: 'Email',
-                hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
+                hintStyle: TextStyle(color: Colors.white),
               ),
             ),
             TextField(
@@ -77,10 +77,10 @@ Widget build(BuildContext context) {
               obscureText: true,
               autocorrect: false,
               enableSuggestions: false,
-              style: const  TextStyle(color: Colors.white), // Set text color to white
+              style: const  TextStyle(color: Colors.white),
               decoration: const InputDecoration(
                 hintText: 'Password',
-                hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
+                hintStyle: TextStyle(color: Colors.white), 
               ),
             ),
             const  SizedBox(height: 16.0),
@@ -91,11 +91,11 @@ Widget build(BuildContext context) {
                 context.read<AuthBloc>().add(AuthEventLogIn(email, password));
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 28, 73, 95), // Set button color to a cooler shade of blue
+                backgroundColor: const Color.fromARGB(255, 28, 73, 95),
               ),
               child: const Text(
                 'Login',
-                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Set button text color to white
+                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
               ),
             ),
             TextButton(
@@ -103,7 +103,7 @@ Widget build(BuildContext context) {
                 context.read<AuthBloc>().add(const AuthEventForgotPassword());
               },
               style: TextButton.styleFrom(
-                backgroundColor: Colors.white, // Set button text color to white
+                backgroundColor: Colors.white,
               ),
               child: const Text('Forgot your password?'),
             ),
@@ -112,7 +112,7 @@ Widget build(BuildContext context) {
                 context.read<AuthBloc>().add(const AuthEventShouldRegister());
               },
               style: TextButton.styleFrom(
-                backgroundColor: Colors.white, // Set button text color to white
+                backgroundColor: Colors.white,
               ),
               child: const Text('Not registered yet? Register here!'),
             ),
