@@ -30,71 +30,71 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your Notes'),
-        backgroundColor: const Color(0xFF1B1B1B),
-        centerTitle: true,
-        actions: [
-          PopupMenuButton<MenuAction>(
-            onSelected: (value) async {
-              switch (value) {
-                case MenuAction.logout:
-                  final shouldLogout = await showLogoutDialog(context);
-                  if (shouldLogout) {
-                    if (context.mounted) {
-                      context.read<AuthBloc>().add(const AuthEventLogOut());
+        appBar: AppBar(
+          title: const Text('Your Notes'),
+          backgroundColor: const Color(0xFF1B1B1B),
+          centerTitle: true,
+          actions: [
+            PopupMenuButton<MenuAction>(
+              onSelected: (value) async {
+                switch (value) {
+                  case MenuAction.logout:
+                    final shouldLogout = await showLogoutDialog(context);
+                    if (shouldLogout) {
+                      if (context.mounted) {
+                        context.read<AuthBloc>().add(const AuthEventLogOut());
+                      }
                     }
+                }
+              },
+              itemBuilder: (context) {
+                return const [
+                  PopupMenuItem(
+                    value: MenuAction.logout,
+                    child: Text('Log out'),
+                  )
+                ];
+              },
+            )
+          ],
+        ),
+        body: Container(
+          color: const Color.fromARGB(255, 55, 53, 53),
+          child: StreamBuilder(
+            stream: _notesService.allNotes(ownerUserId: userId),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                case ConnectionState.active:
+                  if (snapshot.hasData) {
+                    final allNotes = snapshot.data as Iterable<CloudNote>;
+                    return NotesListView(
+                      notes: allNotes,
+                      onDeleteNote: (note) async {
+                        await _notesService.deleteNote(documentId: note.documentId);
+                      },
+                      onTap: (note) {
+                        Navigator.of(context).pushNamed(createOrUpdateNoteRoute, arguments: note);
+                      },
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
                   }
+                default:
+                  return const Center(child: CircularProgressIndicator());
               }
             },
-            itemBuilder: (context) {
-              return const [
-                PopupMenuItem(
-                  value: MenuAction.logout,
-                  child: Text('Log out'),
-                )
-              ];
-            },
-          )
-        ],
-      ),
-      body: Container(
-        color: const Color.fromARGB(255, 55, 53, 53),
-        child: StreamBuilder(
-          stream: _notesService.allNotes(ownerUserId: userId),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-              case ConnectionState.active:
-                if (snapshot.hasData) {
-                  final allNotes = snapshot.data as Iterable<CloudNote>;
-                  return NotesListView(
-                    notes: allNotes,
-                    onDeleteNote: (note) async {
-                      await _notesService.deleteNote(documentId: note.documentId);
-                    },
-                    onTap: (note) {
-                      Navigator.of(context).pushNamed(createOrUpdateNoteRoute, arguments: note);
-                    },
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              default:
-                return const Center(child: CircularProgressIndicator());
-            }
-          },
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(createOrUpdateNoteRoute);
-        },
-        backgroundColor: const Color(0xFFFFD700),
-        
-        child: const Icon(Icons.add, color: Color.fromARGB(255, 255, 255, 255),),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    );
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed(createOrUpdateNoteRoute);
+          },
+          backgroundColor: const Color(0xFFFFD700),
+          
+          child: const Icon(Icons.add, color: Color.fromARGB(255, 255, 255, 255),),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      );
   }
 }

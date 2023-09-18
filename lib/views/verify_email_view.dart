@@ -26,6 +26,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text('Email verification has been sent. Open it to verify your email.',style: TextStyle(color: Colors.white),),
+            const SizedBox(height: 16.0),
             const Text("If you haven't received any verifications, press the button below.",style: TextStyle(color: Colors.white),),
             TextButton(
               onPressed: () async {

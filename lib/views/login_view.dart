@@ -55,69 +55,81 @@ Widget build(BuildContext context) {
         color: const Color.fromARGB(255, 55, 53, 53), 
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'You have to login to create notes and store them.',
-              style: TextStyle(color: Colors.white),
-            ),
-            TextField(
-              controller: _email,
-              autocorrect: false,
-              enableSuggestions: false,
-              keyboardType: TextInputType.emailAddress,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                hintText: 'Email',
-                hintStyle: TextStyle(color: Colors.white),
-              ),
-            ),
-            TextField(
-              controller: _password,
-              obscureText: true,
-              autocorrect: false,
-              enableSuggestions: false,
-              style: const  TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextStyle(color: Colors.white), 
-              ),
-            ),
-            const  SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () async {
-                final email = _email.text;
-                final password = _password.text;
-                context.read<AuthBloc>().add(AuthEventLogIn(email, password));
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 28, 73, 95),
-              ),
-              child: const Text(
-                'Login',
-                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<AuthBloc>().add(const AuthEventForgotPassword());
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.white,
-              ),
-              child: const Text('Forgot your password?'),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<AuthBloc>().add(const AuthEventShouldRegister());
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.white,
-              ),
-              child: const Text('Not registered yet? Register here!'),
-            ),
-          ],
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    const Text(
+      'You have to login to create notes and store them.',
+      style: TextStyle(color: Colors.white),
+    ),
+    const SizedBox(height: 26.0),
+    TextField(
+      controller: _email,
+      autocorrect: false,
+      enableSuggestions: false,
+      keyboardType: TextInputType.emailAddress,
+      style: const TextStyle(color: Colors.white),
+      decoration: const InputDecoration(
+        hintText: 'Email',
+        hintStyle: TextStyle(color: Color.fromARGB(255, 103, 99, 99)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color.fromARGB(255, 86, 83, 83)),
+          borderRadius: BorderRadius.all(Radius.circular(20))
         ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white)
+        )
+      ),
+    ),
+    const SizedBox(height: 20.0),
+    TextField(
+      controller: _password,
+      obscureText: true,
+      autocorrect: false,
+      enableSuggestions: false,
+      style: const TextStyle(color: Colors.white),
+      decoration: const InputDecoration(
+        hintText: 'Password',
+        hintStyle: TextStyle(color: Color.fromARGB(255, 103, 99, 99)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color.fromARGB(255, 86, 83, 83)),
+          borderRadius: BorderRadius.all(Radius.circular(20))
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white)
+          )
+      ),
+    ),
+    const SizedBox(height: 26.0),
+    ElevatedButton(
+      onPressed: () async {
+        final email = _email.text;
+        final password = _password.text;
+        context.read<AuthBloc>().add(AuthEventLogIn(email, password));
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromARGB(255, 28, 73, 95),
+      ),
+      child: const Text(
+        'Login',
+        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+      ),
+    ),
+    TextButton(
+      onPressed: () {
+        context.read<AuthBloc>().add(const AuthEventForgotPassword());
+      },
+      style: TextButton.styleFrom(),
+      child: const Text('Forgot your password?'),
+    ),
+    TextButton(
+      onPressed: () {
+        context.read<AuthBloc>().add(const AuthEventShouldRegister());
+      },
+      style: TextButton.styleFrom(),
+      child: const Text('Not registered yet? Register here!'),
+    ),
+  ],
+),
       ),
     ),
   );

@@ -60,7 +60,6 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
           padding: const EdgeInsets.all(16.0),
           color: const Color.fromARGB(255, 55, 53, 53),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Text('If you forgot your password, write your email and we will send you a recovery link.', style: TextStyle(color: Colors.white),),
               TextField(
@@ -71,7 +70,14 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   hintText: 'Email address',
-                  hintStyle: TextStyle(color: Colors.white)
+                  hintStyle: TextStyle(color: Color.fromARGB(255, 103, 99, 99)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color.fromARGB(255, 86, 83, 83)),
+                    borderRadius: BorderRadius.all(Radius.circular(23))
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white)
+                  )
                 ),
               ),
               TextButton(
